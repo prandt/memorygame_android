@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Memory Game</string>
+    <string name="startGame">Iniciar o jogo</string>
+    <string name="gameTitle">Jogo da Memória</string>
+    <string name="cardDesc">Card Image</string>
+    <string name="plays_remaining">Jogadas restantes</string>
 </resources>

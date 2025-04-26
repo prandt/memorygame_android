@@ -1,53 +1,35 @@
 package com.rprandt.memorygame
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Canvas
+import android.content.Intent
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
-import android.view.View.OnTouchListener
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.rprandt.memorygame.interfaces.IScene
-import com.rprandt.memorygame.scenes.StartScene
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.rprandt.memorygame.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    @SuppressLint("ClickableViewAccessibility")
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        MainScene(this).also {
-            it.setOnTouchListener(it)
-            setContentView(it)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
-    }
-    
-    class MainScene(context: Context): View(context), OnTouchListener {
-        private var scene: IScene = StartScene(this)
-
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-            this.render(canvas)
-            invalidate()
-        }
-
-        private fun render(canvas: Canvas) {
-            scene.render(canvas)
-        }
-
-        fun setScene(newScene: IScene) {
-            scene = newScene
-            invalidate() // Request a redraw of the view
-        }
-
-        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-            val e = event ?: return false
-            invalidate()
-            return scene.onTouch(e)
-        }
-
+        setupUI()
     }
 
+    private fun setupUI() {
+        binding.startButton.setOnClickListener {
+            // Start the game
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+        }
+    }
 }
